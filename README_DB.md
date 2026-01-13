@@ -1,53 +1,37 @@
-# 읽어두기
-**고유 번호**는 Discord에서 부여한 Snowflakes,
-
-**순번**은 첩첩냥에서 부여한 임의의 숫자,
-
-**식별자**는 제공자 구별 없이 식별을 위한 임의의 숫자나 영어의 조합
+# 알아두기
+- **고유 번호**는 Discord에서 부여한 Snowflakes (18~19글자의 10진수로 이루어진 ID),
+- **순번**은 첩첩냥에서 부여한 임의의 숫자,
+- **식별자**는 제공자 구별 없이 식별을 위한 임의의 숫자나 영어의 조합
+- PRIMARY KEY는 <ins>밑줄</ins> 표시, relation은 *기울임체* 표시
 
 # user.db
 
 테이블 명: config.py `SEASON` 값 (ex: `Season-FiNALE`)
 
-`userId` 유저 고유 번호
-
-`exp` 채팅패스 경험치
-
-`level` 채팅패스 레벨 (다음 레벨업 확인용)
-
-`cooldown` 다음 경험치 획득 가능 시간 (UNIX Time)
-
-`reward` reward.db로 이전 (현재 사용 X)
-
-`bottleMultiple` 경험치 증가 배수
-
-`bottlePeriod` 경험치 증가 종료 시간 (UNIX Time)
+| <ins>userId</ins> | exp | level | cooldown | ~~reward~~ | bottleMultiple | bottlePeriod |
+| ------ | --- | ----- | -------- | ------ | -------------- | ------------ |
+| 유저 고유 번호 | 경험치 | 레벨 | 다음 경험치 획득 가능 `UNIX` | 미사용 | 경험치 증가 배수 | 경험치 증가 종료 `UNIX` |
+| 123546789012345678 | 0 | 0 | 1768324387 | `NULL` | 1.5 | 1768324387 |
 
 # season.db
 
 테이블 명: config.py `SEASON` 값 (ex: `Season-FiNALE`)
 
-`level` 보상을 획득할 채팅패스 레벨
+item(n)일 때 n은 1, 2, 3이 존재합니다.
 
-`item(1,2,3)` 일반 보상 아이템 식별자
-
-`item(1,2,3)_amount` 일반 보상 아이템 획득 개수
-
-`item(1,2,3)_data` 획득할 아이템 데이터 (물약 기간 등)
-
-`premium`, `premium_amount`, `premium_data` 프리미엄 (서버 부스팅) 아이템 관련 (위와 내용은 같음)
+| <ins>level</ins> | item1 | item1_amount | item1_data | ... | premium | premium_amount | premium_data |
+| ----- | ----- | ------------ | ---------- | --- | ------- | -------------- | ------------ |
+| 레벨 | 아이템 식별자 | 아이템 개수 | 아이템 데이터 `JSON` | ... | 서버 부스트 전용 아이템<br>(패스 프리미엄) | ... | ... |
+| 1 | exp-bottle | 1 | {"multiple": 1.5,<br>"minutes": 30} | ... | goods-lottery | 1 | {} |
 
 # reward.db
 
 테이블 명: config.py `SEASON` 값 (ex: `Season-FiNALE`)
 
-`userId` 유저 고유 번호
-
-`level` 채팅패스 레벨
-
-`rewardId` season.db에 기록된 리워드 순번 (`item(1,2,3)`의 숫자)
-
-`rewarded` 1이면 획득함 (중복획득방지)
+| userId | level | rewardId | rewarded |
+| ------ | ----- | -------- | -------- |
+| 유저 고유 번호 | 레벨 | 아이템 순번 | 획득 여부 `BOOL` |
+| 123546789012345678 | 1 | 1 | 1 |
 
 # log.db
 
@@ -71,32 +55,24 @@
 
 # item.db
 
-`itemId` 아이템 식별자
-
-`emoji` 아이템 이모지
-
-`ko` 한국어 이름
-
-`en` 영어 이름
-
-`desc_ko` 한국어 설명
-
-`desc_en` 영어 설명
+| <ins>itemId</ins> | emoji | ko | en | desc_ko | desc_en |
+| ------ | ----- | -- | -- | ------- | ------- |
+| 아이템 식별자 | 이모지 | 한국어 이름 | 영어 이름 | 한국어 설명 | 영어 설명 |
+| goods-lottery	| 🎫 | 굿즈 응모권 | Goods enter-lottery ticket | 해당 시즌의... | A ticket that... |
 
 # inventory.db
 
 ※ 테이블 명은 무조건 `유저 고유 번호`여야 함
 
-`item` 아이템 식별자
-
-`amount` 개수
-
-`data` 아이템 데이터
-
-PRIMARY KEY = `item` and `data`
-`item`값이 중복이어도 `data`값이 다르면 내부에서 다른 아이템으로 침
+| <ins>itemId</ins> | amount | <ins>data</ins> |
+| ------ | ------ | ---- |
+| 아이템 식별자 | 개수 | 데이터 `JSON` |
+| goods-exchange | 1 | {} |
 
 # account.db
+
+| <ins>discordId</ins> | twitchId | email | phone | ok |
+
 
 `discordId` 유저 고유 번호
 
