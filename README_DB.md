@@ -1,12 +1,13 @@
 # 알아두기
-- **고유 번호**는 Discord에서 부여한 Snowflakes (18~19글자의 10진수로 이루어진 ID),
-- **순번**은 첩첩냥에서 부여한 임의의 숫자,
+- **고유 번호**는 Discord에서 부여한 Snowflakes (18~19글자의 10진수로 이루어진 ID)
+- **순번**은 첩첩냥에서 부여한 임의의 숫자
 - **식별자**는 제공자 구별 없이 식별을 위한 임의의 숫자나 영어의 조합
 - PRIMARY KEY는 <ins>밑줄</ins> 표시, relation은 *기울임체* 표시
+- 모든 예시는 실제와 같지 않을 수 있음.
 
 # user.db
 
-테이블 명: config.py `SEASON` 값 (ex: `Season-FiNALE`)
+- 테이블 명은 config.py의 `SEASON` 값이어야 함
 
 | <ins>userId</ins> | exp | level | cooldown | ~~reward~~ | bottleMultiple | bottlePeriod |
 | ------ | --- | ----- | -------- | ------ | -------------- | ------------ |
@@ -15,9 +16,8 @@
 
 # season.db
 
-테이블 명: config.py `SEASON` 값 (ex: `Season-FiNALE`)
-
-item(n)일 때 n은 1, 2, 3이 존재합니다.
+- 테이블 명은 config.py의 `SEASON` 값이어야 함
+- 컬럼명 중 item(n)인 경우 n은 1, 2, 3이 존재함
 
 | <ins>level</ins> | item1 | item1_amount | item1_data | ... | premium | premium_amount | premium_data |
 | ----- | ----- | ------------ | ---------- | --- | ------- | -------------- | ------------ |
@@ -26,7 +26,7 @@ item(n)일 때 n은 1, 2, 3이 존재합니다.
 
 # reward.db
 
-테이블 명: config.py `SEASON` 값 (ex: `Season-FiNALE`)
+- 테이블 명은 config.py의 `SEASON` 값이어야 함
 
 | userId | level | rewardId | rewarded |
 | ------ | ----- | -------- | -------- |
@@ -35,23 +35,10 @@ item(n)일 때 n은 1, 2, 3이 존재합니다.
 
 # log.db
 
-`time` 이벤트 발생 시각 (UNIX Time)
-
-`event` 이벤트 타입
-
-`userId` 유저저 고유 번호
-
-`gainedExp` 이벤트 `ExpFrom***`일 때 획득한 경험치 (음수도 가능)
-
-`cmdUserId` 관리자가 실행한 이벤트일 경우 이벤트를 실행한 관리자
-
-`item` 해당 이벤트로 획득한 아이템
-
-`itemAmount` 아이템 개수
-
-`chId` 이벤트 발생 채널 고유 번호
-
-`msgId` 이벤트 발생 메시지 고유 번호
+| time | event | userId | gainedExp | cmdUserId | item | itemAmount | chId | msgId |
+|  ---- | ----- | ------ | --------- | --------- | ---- | ---------- | ---- | ----- |
+| 발생 시각 `UNIX` | 이벤트 타입 | 유저 고유 번호 | 경험치 획득량 `NUMERIC` | 관리자 | 아이템 식별자 | 개수 | 채널 고유 번호 | 메시지 고유 번호 |
+| 1674482277.61669 | ExpFromChat | 123456789012345678 | 11.1208786618137 |	null | null | null | 123456789012345670 | 2345678901234567890 |
 
 # item.db
 
@@ -62,7 +49,7 @@ item(n)일 때 n은 1, 2, 3이 존재합니다.
 
 # inventory.db
 
-※ 테이블 명은 무조건 `유저 고유 번호`여야 함
+- 테이블 명은 무조건 `유저 고유 번호`여야 함
 
 | <ins>itemId</ins> | amount | <ins>data</ins> |
 | ------ | ------ | ---- |
@@ -72,44 +59,32 @@ item(n)일 때 n은 1, 2, 3이 존재합니다.
 # account.db
 
 | <ins>discordId</ins> | twitchId | email | phone | ok |
-
-
-`discordId` 유저 고유 번호
-
-`twitchId` Twitch에서 부여한 계정 ID
-
-`email` (Discord 로그인 시) 이메일 (기본값 null)
-
-`phone` 휴대전화번호 (웹사이트 인증 시)
-
-`ok` ??? 이거 뭐였지 일단 놔둬보세요 0도 있고 1도 있는데 이거
+| --------- | -------- | ----- | ----- | -- |
+| 유저 고유 번호 | Twitch 계정 번호 | 이메일 | 휴대전화번호 | ??? `Bool` |
+| 123456789012345678 | 123454678 | \*\*\*\*\*@\*\*\*\*\*.\*\*\* | \*\*\*\*\*\*\*\*\*\* | 1 |
 
 # attendance.db
 
-※ 테이블 명은 무조건 `attendance-연도-월` 이어야 함 (월은 한자리수면 앞에 0 붙어야됨)
+- 테이블 명은 무조건 `attendance-연도-월` 이어야 함 (월은 한자리수면 앞에 0 붙어야됨)
+- 메시지 개수는 2개 이상일 경우 출석 인정
 
-`userId` 유저 고유 번호
-
-`day(1~31)` 출석 여부 (2 이상 = 출석 인정)
+| <ins>userId</ins> | day1 | day2 | ... | day30 | day31 |
+| ------ | ---- | ---- | ---- | ---- | ---- |
+| 유저 고유 번호 | 1일차 메시지 개수 | 2일차 메시지 개수 |  ... | 30일차 메시지 개수 | 31일차 메시지 개수 |
+| 123456789012345678 | 77 | 12 | ... | 31 | 118 |
 
 # gamble.db
 
-테이블 명 `blackjack`
+- 테이블 명은 무조건 `blackjack`이어야 함.
 
-`userId` 유저 고유 번호
-
-`channelId` 스레드 고유 번호
-
-`betting` 냥코인 개수
-
-`player` 플레이어 보유 카드
-
-`dealer` 딜러 보유 카드
-
-`remained` 남은 카드
+| userId | channelId | betting | player | dealer | remained |
+| ------ | --------- | ------- | ------ | ------ | -------- |
+| 유저 고유 번호 | 스레드 고유 번호 | 냥코인 개수 | 플레이어 보유 카드 `LIST` | 딜러 보유 카드 `LIST` | 남은 카드 `LIST` |
+| 123456789012345678 | 2345678901234567890 | 53022 | ['1♠', '2♠'] | ['Q♠', '3♥'] | [ ... ] |
 
 # 이벤트 데이터베이스
 
-`userId` 유저 고유 번호
-
-`point` (컬럼명 변경가능) 이벤트 포인트 개수
+| <ins>userId</ins> | point |
+| ------ | ----- |
+| 유저 고유 번호 | 이벤트 포인트 개수 |
+| 123456789012345678 | 53022 |
